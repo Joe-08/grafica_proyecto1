@@ -82,6 +82,7 @@ public:
         if(h<0.0) {return false;}
         h = sqrt(h);
         t = (-b - h)/a;
+        if(t<=0) return false;
         float y = caoc+t*card;
         if(y>0.0 && y<caca) {
             normal = (oc+rd*t-ca*y/caca)/radio;
