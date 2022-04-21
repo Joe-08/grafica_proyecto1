@@ -139,6 +139,63 @@ public:
 
         cam.Renderizar( luz, vec_objetos );
     }
+
+    void escenario_proyecto(){
+    cam.init(60,10, 1280, 720,
+             vec3(0,19,30),
+             vec3(0,10,0),
+             vec3(0,1,0));
+        cam.calcular_vectores();
+
+        luz.set(vec3(0,10,50), vec3(1,1,1));
+      
+      Cilindro *cil1 = new Cilindro();
+      cil1->color = vec3(1,1,1);
+      cil1->pa = vec3(0,20,0);
+      cil1->pb = vec3(0,0,0);
+      cil1->radio = 10;
+      cil1->kr = 0.5;
+      cil1->ior = 1.5;
+      vec_objetos.emplace_back(cil1);
+/*
+      Cilindro *cil2 = new Cilindro();
+      cil2->color = vec3(1,1,1);
+      cil2->pa = vec3(0,20,0);
+      cil2->pb = vec3(0,0,0);
+      cil2->radio = 9.5;
+      cil2->kr = 1;
+      cil2->ior = 1;
+      vec_objetos.emplace_back(cil2);
+*/
+
+        Esfera *esf1 = new Esfera();
+        esf1->centro = vec3(0,10,0);
+        esf1->radio = 1;
+        esf1->color = vec3(1,1,0);
+        esf1->kd = 1;
+        esf1->n = 8;
+        vec_objetos.emplace_back(esf1);
+
+        Esfera *esf2 = new Esfera();
+        esf2->centro = vec3(-5,5,0);
+        esf2->radio = 1;
+        esf2->color = vec3(1,1,0);
+        esf2->kd = 1;
+        esf2->n = 8;
+        vec_objetos.emplace_back(esf2);
+
+      Plano *plano = new Plano();
+        plano->normal = vec3(0,1,0);
+        plano->normal.normalize();
+        plano->distancia = 0;
+        plano->color = vec3(0,0.5,0.5);
+        plano->kd = 1.5;
+        vec_objetos.emplace_back(plano);
+        
+
+      cam.Renderizar( luz, vec_objetos );
+
+    }
     ~Mundo(){};
 };
 

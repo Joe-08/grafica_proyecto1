@@ -5,6 +5,6 @@ using namespace std;
 int main()
 {
     Mundo mundo;
-    mundo.escenario1();
+    mundo.escenario_proyecto();
     return 0;
 }

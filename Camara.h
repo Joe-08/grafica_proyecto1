@@ -6,6 +6,9 @@
 #include "Rayo.h"
 #include "Objeto.h"
 #include "Luz.h"
+#include <vector>
+#include <fstream>
+using namespace std;
 using namespace cimg_library;
 typedef unsigned char BYTE;
 
@@ -23,12 +26,12 @@ public:
     CImg<BYTE> *pImg;
     
     Camara(){ prof_max = 4; };
-    void init(float angulo, float near, int ancho, int alto, vec3 pos, vec3 cen, vec3 _up) {
+    void init(float angulo, float ne, int ancho, int alto, vec3 pos, vec3 cen, vec3 _up) {
         fov = angulo;
         eye = pos;
         center = cen;
         up = _up;
-        f = near;
+        f = ne;
         w = ancho;
         h = alto;
 
@@ -50,7 +53,7 @@ public:
         Rayo rayo;
         rayo.origen = eye;
         float t,t_min;
-        vec3 color,color_min(1,1,1);
+        vec3 color;
         vec3 normal,normal_min;
 
         for(int y=0;y<h;y++) {
@@ -74,12 +77,12 @@ public:
 
     bool calcular_color(Rayo rayo,Luz &luz,std::vector<Objeto*> &vec_objetos,vec3 &color,int prof) {
         if(prof >= prof_max) {
-            color = vec3(1,1,1);
+            color = vec3(0,0,0);
             return false;
         }
         
         float t_calculado,t=1e6;
-        vec3 color_min(1,1,1);
+        vec3 color_min(0,0,0);
         vec3 normal, N;
         bool intersecta = false;
         Objeto *pObj;
