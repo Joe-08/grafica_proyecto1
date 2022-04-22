@@ -46,7 +46,7 @@ public:
         ye = ze.prod_cruz(xe);
         ye.normalize();//puede que se quite
     }
-    void Renderizar(Luz luz, std::vector<Objeto*> &vec_objetos) {
+    void Renderizar(std::vector<Luz*> &luces, std::vector<Objeto*> &vec_objetos) {
         pImg = new CImg<BYTE>(w,h,1,10);
         CImgDisplay dis_img((*pImg),"Imagen");
 
@@ -60,7 +60,7 @@ public:
             for(int x=0;x<w;x++) {
                 rayo.direccion = ze*(-f) + ye*a*(y/h-0.5) + xe*b*(x/w-0.5); //Rayo en coordenadas de la camara
                 rayo.direccion.normalize();
-                bool intersecta = calcular_color(rayo,luz,vec_objetos,color,0);
+                bool intersecta = calcular_color(rayo,luces,vec_objetos,color,0);
                 
                 (*pImg)(x,h-1-y,0) = (BYTE)(color.x*255);
                 (*pImg)(x,h-1-y,1) = (BYTE)(color.y*255);
@@ -75,7 +75,7 @@ public:
         }
     }
 
-    bool calcular_color(Rayo rayo,Luz &luz,std::vector<Objeto*> &vec_objetos,vec3 &color,int prof) {
+    bool calcular_color(Rayo rayo,std::vector<Luz*>& luces,std::vector<Objeto*> &vec_objetos,vec3 &color,int prof) {
         if(prof >= prof_max) { color = vec3(0,0,0); }
         
         float t_calculado,t=1e6;
@@ -95,29 +95,29 @@ public:
             }
         }
       
-        if(intersecta) {
-            //Calcular luz ambiente
-            vec3 luz_ambiente = luz.color*luz.intensidad;   
+        if(intersecta) {  
             color_min = pObj->color;
             //pi punto de interseccion
             vec3 pi = rayo.origen+rayo.direccion*t;
-            //L vector hacia la luz
-            vec3 L = luz.pos-pi;
-            L.normalize();
             
             switch(pObj->type) {
               case kDifuso:{
-                
+                for(int i = 0; i < luces.size();i++){
+                  //Calcular luz ambiente
+                  vec3 luz_ambiente = (luces[i]->color*luces[i]->intensidad);
+                  //L vector hacia la luz
+                  vec3 L = luces[i]->pos-pi;
+                  L.normalize();
                   //Calculando la sombra
                   Rayo rayo_sombra;
                   rayo_sombra.direccion = L;
                   rayo_sombra.origen = pi+L*0.1;
                   vec3 color_tmp;
-                  bool intersec = calcular_color(rayo_sombra,luz,vec_objetos,color_tmp,prof+1);
+                  bool intersec = calcular_color(rayo_sombra,luces,vec_objetos,color_tmp,prof+1);
                   if(!intersec) {
                       float factor_difuso = L.prod_punto(N); // N*L
                       vec3 luz_difusa(0,0,0);
-                      if(factor_difuso>0) luz_difusa = luz.color*factor_difuso*pObj->kd;
+                      if(factor_difuso>0) luz_difusa = luces[i]->color*factor_difuso*pObj->kd;
                       //iluminacion especular
                       vec3 r = N*N.prod_punto(L)*2-L;
                       vec3 v = -rayo.direccion;
@@ -125,10 +125,11 @@ public:
                       vec3 luz_especular(0,0,0);
                       if(pObj->ke>0) {
                           float factor_especular = pow(r.prod_punto(v),pObj->n);
-                          if(factor_especular>0) luz_especular = luz.color*factor_especular*pObj->ke;
+                          if(factor_especular>0) luz_especular = luces[i]->color*factor_especular*pObj->ke;
                       }
-                      color_min = color_min*(luz_ambiente+luz_difusa+luz_especular);
-                  } else color_min = color_min*luz_ambiente;
+                      color_min = color_min + color_min*(luz_ambiente+luz_difusa+luz_especular);
+                  } else color_min = color_min + color_min*luz_ambiente;
+                }
                 break;
                 }
               case kReflexion:{
@@ -140,7 +141,7 @@ public:
                 vec3 bias = 0.001*N;
                 vec3 refOri = afuera ? pi+bias : pi-bias;
                 Rayo rayo_reflejado(R,refOri);
-                calcular_color(rayo_reflejado,luz,vec_objetos,color_reflejado,prof+1);
+                calcular_color(rayo_reflejado,luces,vec_objetos,color_reflejado,prof+1);
                 color_min = color_min + color_reflejado*pObj->kr;
                 break;
               }
@@ -161,7 +162,7 @@ public:
                   refDir.normalize();
                   vec3 refOri = afuera ? pi-bias : pi+bias;
                   Rayo rayo_refractado(refOri,refDir);
-                     calcular_color(rayo_refractado,luz,vec_objetos,color_refractado,prof+1);
+                     calcular_color(rayo_refractado,luces,vec_objetos,color_refractado,prof+1);
                 }
 
                 // hacer reflexion
@@ -169,7 +170,7 @@ public:
                 reflDir.normalize();
                 vec3 reflOri = afuera ? pi+bias : pi-bias;
                 Rayo rayo_reflejado(reflOri,reflDir);
-                calcular_color(rayo_reflejado,luz,vec_objetos,color_reflejado,prof+1);
+                calcular_color(rayo_reflejado,luces,vec_objetos,color_reflejado,prof+1);
                 // combinar los colores
                 color_min = color_min + color_reflejado*kr+color_refractado*(1-kr);
                 break;
