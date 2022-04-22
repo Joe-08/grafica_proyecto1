@@ -7,11 +7,14 @@
 template <typename T>
 int sign (const T &val) { return (val > T(0)) - (val < T(0)); }
 
+enum MaterialType { kDifuso, kReflexion, kReflexionyRefraccion};
+
 class Objeto {
 public:
     vec3 color;
+    MaterialType type;
     float kd,ke,kr,n,ior;
-    Objeto(){ kd=0.5; ke=0; kr=0; n=1; ior=0; };
+    Objeto(){ type=kDifuso; kd=1; ke=0; kr=0; n=1; ior=1; };
     virtual bool interseccion(Rayo &rayo, float &t, vec3 &normal) = 0;
     virtual ~Objeto(){};
 };
