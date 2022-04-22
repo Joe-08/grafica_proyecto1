@@ -20,14 +20,14 @@ public:
              vec3(0,1,0));
         cam.calcular_vectores();
 
-        luz.set(vec3(0,10,0), vec3(1,1,1),0.3);
+        luz.set(vec3(0,10,0), vec3(1,1,1),0.8);
       
       Cilindro *cil1 = new Cilindro();
       cil1->color = vec3(1,1,1);
       cil1->pa = vec3(0,20,0);
       cil1->pb = vec3(0,0,0);
       cil1->radio = 10;
-      cil1->kr = 0.5;
+      cil1->kr = 0;
       cil1->ior = 1.5;
       cil1->type = kReflexionyRefraccion;
       vec_objetos.emplace_back(cil1);
@@ -55,8 +55,9 @@ public:
         esf1->centro = vec3(0,10,0);
         esf1->radio = 1;
         esf1->color = vec3(1,1,1);
-        esf1->kd = 1;
-        esf1->n = 1;
+        esf1->kr = 0;
+        esf1->ior = 1.5;
+        esf1->type = kReflexionyRefraccion;
         vec_objetos.emplace_back(esf1);
 
         Esfera *esf2 = new Esfera();
