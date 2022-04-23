@@ -76,7 +76,9 @@ public:
     }
 
     bool calcular_color(Rayo rayo,std::vector<Luz*>& luces,std::vector<Objeto*> &vec_objetos,vec3 &color,int prof) {
-        if(prof >= prof_max) { color = vec3(0,0,0); }
+        if(prof >= prof_max) { 
+          return false;
+          }
         
         float t_calculado,t=1e6;
         vec3 color_min(0,0,0);

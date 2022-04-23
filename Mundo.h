@@ -20,70 +20,74 @@ public:
              vec3(0,1,0));
         cam.calcular_vectores();
       Luz *luz1 = new Luz();
-      luz1->set(vec3(-70,70,70), vec3(1,1,1),0.1);
+      luz1->set(vec3(-70,70,70), vec3(0.5,0.5,0.5),0.1);
       luces.push_back(luz1);
 
       Luz *luz2 = new Luz();
-      luz2->set(vec3(0,10,0), vec3(0.1,0.1,0),0.5);
+      luz2->set(vec3(0,10,0.75), vec3(0.5,0.5,0.5),0.1);
       luces.push_back(luz2);
         //luz.set(vec3(0,10,0), vec3(1,1,1),0.5);
         
-      Cilindro *cil1 = new Cilindro();
-      cil1->color = vec3(0,0,0);
-      cil1->pa = vec3(0,20,0);
-      cil1->pb = vec3(0,0,0);
-      cil1->radio = 10;
-      cil1->kr = 0.9;
-      cil1->ior = 1.5;
-      cil1->type = kReflexionyRefraccion;
-      vec_objetos.emplace_back(cil1);
+      Cilindro *jarron_vidrio = new Cilindro();
+      jarron_vidrio->color = vec3(0.1,0.1,0.1);
+      jarron_vidrio->pa = vec3(0,20,0);
+      jarron_vidrio->pb = vec3(0,0,0);
+      jarron_vidrio->radio = 10;
+      jarron_vidrio->kr = 0.9;
+      jarron_vidrio->ior = 1.5;
+      jarron_vidrio->type = kReflexionyRefraccion;
+      vec_objetos.emplace_back(jarron_vidrio);
 
-      Cilindro *cil2 = new Cilindro();
-      cil2->color = vec3(0.5,0.5,0);
-      cil2->pa = vec3(0,20,0);
-      cil2->pb = vec3(0,22,0);
-      cil2->radio = 11;
-      cil2->kd = 1;
-      vec_objetos.emplace_back(cil2);
+      Cilindro *jarron_tapa = new Cilindro();
+      jarron_tapa->color = vec3(0.75,0.75,0.25);
+      jarron_tapa->pa = vec3(0,20,0);
+      jarron_tapa->pb = vec3(0,22,0);
+      jarron_tapa->radio = 11;
+      jarron_tapa->kd = 1;
+      vec_objetos.emplace_back(jarron_tapa);
       
-      Cilindro *cil3 = new Cilindro();
-      cil3->color = vec3(0,0,0);
-      cil3->pa = vec3(0,20,0);
-      cil3->pb = vec3(0,22,0);
-      cil3->radio = 9;
-      cil3->kr = 0;
-      cil3->ior = 1;
-      cil3->type = kReflexionyRefraccion;
-      vec_objetos.emplace_back(cil3);
+      Cilindro *jarron_vacio = new Cilindro();
+      jarron_vacio->color = vec3(0,0,0);
+      jarron_vacio->pa = vec3(0,20,0);
+      jarron_vacio->pb = vec3(0,22,0);
+      jarron_vacio->radio = 9;
+      jarron_vacio->kr = 0;
+      jarron_vacio->ior = 1;
+      jarron_vacio->type = kReflexionyRefraccion;
+      vec_objetos.emplace_back(jarron_vacio);
 
+      Esfera *esf1 = new Esfera();
+      esf1->centro = vec3(0,10,0);
+      esf1->radio = 0.5;
+      esf1->color = vec3(1,1,1);
+      vec_objetos.emplace_back(esf1);
+      
+      Esfera *esf1_glow = new Esfera();
+      esf1_glow->centro = vec3(0,10,0);
+      esf1_glow->radio = 1;
+      esf1_glow->color = vec3(1,1,0.75);
+      esf1_glow->kr = 0.9;
+      esf1_glow->ior = 1.5;
+      esf1_glow->type=kReflexionyRefraccion;
+      vec_objetos.emplace_back(esf1_glow);
 
-      Cilindro *cil4 = new Cilindro();
-      cil4->color = vec3(1,1,1);
-      cil4->pa = vec3(-20,20,20);
-      cil4->pb = vec3(-20,20,0);
-      cil4->radio = 10;
-      vec_objetos.emplace_back(cil4);
-
-
-        Esfera *esf1 = new Esfera();
-        esf1->centro = vec3(0,10,0);
-        esf1->radio = 1;
-        esf1->color = vec3(1,1,1);
-        esf1->kd = 1;
-        esf1->n = 8;
-        vec_objetos.emplace_back(esf1);
-
-        Esfera *esf2 = new Esfera();
-        esf2->centro = vec3(-5,5,0);
-        esf2->radio = 1;
-        esf2->color = vec3(1,1,1);
-        esf2->kd = 1;
-        esf2->n = 8;
-        vec_objetos.emplace_back(esf2);
-
-
-
-
+      Esfera *esf2 = new Esfera();
+      esf2->centro = vec3(-5,5,0);
+      esf2->radio = 1;
+      esf2->color = vec3(1,1,1);
+      esf2->kd = 1;
+      esf2->n = 8;
+      vec_objetos.emplace_back(esf2);
+      
+      Cubo *cubo1 = new Cubo();
+      cubo1->color = vec3(1,0,0);
+      cubo1->centro = vec3(-20,10,5);
+      cubo1->size = vec3(5,5,5);
+      cubo1->kd = 1;
+      cubo1->ke= 0.5;
+      cubo1->n = 8;
+      vec_objetos.emplace_back(cubo1);
+      
       Plano *plano = new Plano();
         plano->normal = vec3(0,1,0);
         plano->normal.normalize();
