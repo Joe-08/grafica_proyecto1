@@ -115,14 +115,7 @@ public:
     vec3 size;
     vec3 centro;
     vec3 min,max;
-    Cubo(){
-        min->x = -1.0;
-        min->y = -1.0;
-        min->z = -1.0;
-        max->x = 1.0;
-        max->y = 1.0;
-        max->z = 1.0;
-    }
+    Cubo(){}
     bool interseccion(Rayo &rayo, float &t, vec3 &normal) {
         vec3 m = 1.0/rayo.direccion;
         vec3 m_abs = m;

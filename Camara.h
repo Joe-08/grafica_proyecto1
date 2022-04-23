@@ -7,6 +7,8 @@
 #include "Objeto.h"
 #include "Luz.h"
 #include <vector>
+#include <iostream>
+#include <string>
 #include <fstream>
 using namespace std;
 using namespace cimg_library;
@@ -46,9 +48,8 @@ public:
         ye = ze.prod_cruz(xe);
         ye.normalize();//puede que se quite
     }
-    void Renderizar(std::vector<Luz*> &luces, std::vector<Objeto*> &vec_objetos) {
+    void Renderizar(std::vector<Luz*> &luces, std::vector<Objeto*> &vec_objetos,int fotograma) {
         pImg = new CImg<BYTE>(w,h,1,10);
-        CImgDisplay dis_img((*pImg),"Imagen");
 
         Rayo rayo;
         rayo.origen = eye;
@@ -67,12 +68,20 @@ public:
                 (*pImg)(x,h-1-y,2) = (BYTE)(color.z*255);
             }
         }
+        std::cout << "Guardando fotograma: " << fotograma << endl;
+        string filename = "./output/fotograma"+to_string(fotograma)+".bmp";
+        pImg->save(filename.c_str());
+        // mogrify jpg *.bmp
+        /*
+        CImgDisplay dis_img((*pImg),"Imagen");
         dis_img.render((*pImg));
         dis_img.paint();
 
         while(!dis_img.is_closed()) {
             dis_img.wait();
         }
+        */
+        
     }
 
     bool calcular_color(Rayo rayo,std::vector<Luz*>& luces,std::vector<Objeto*> &vec_objetos,vec3 &color,int prof) {
@@ -105,8 +114,8 @@ public:
             switch(pObj->type) {
               case kDifuso:{
                 for(int i = 0; i < luces.size();i++){
-                  //Calcular luz ambiente
                   vec3 luz_ambiente = (luces[i]->color*luces[i]->intensidad);
+                  //Calcular luz ambiente
                   //L vector hacia la luz
                   vec3 L = luces[i]->pos-pi;
                   L.normalize();
@@ -129,8 +138,8 @@ public:
                           float factor_especular = pow(r.prod_punto(v),pObj->n);
                           if(factor_especular>0) luz_especular = luces[i]->color*factor_especular*pObj->ke;
                       }
-                      color_min = color_min + color_min*(luz_ambiente+luz_difusa+luz_especular);
-                  } else color_min = color_min + color_min*luz_ambiente;
+                      color_min = color_min*(luz_ambiente+luz_difusa+luz_especular);
+                  } else color_min = color_min*luz_ambiente;
                 }
                 break;
                 }
