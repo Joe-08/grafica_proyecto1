@@ -6,6 +6,7 @@
 #include "Rayo.h"
 #include "Objeto.h"
 #include "Luz.h"
+#include <omp.h>
 #include <vector>
 #include <iostream>
 #include <string>
@@ -57,8 +58,9 @@ public:
         vec3 color;
         vec3 normal,normal_min;
 
-        for(int y=0;y<h;y++) {
-            for(int x=0;x<w;x++) {
+        #pragma omp parallel for private(rayo,t,t_min,color,normal,normal_min)
+        for(int y=0;y<624;y++) {
+            for(int x=0;x<352;x++) {
                 rayo.direccion = ze*(-f) + ye*a*(y/h-0.5) + xe*b*(x/w-0.5); //Rayo en coordenadas de la camara
                 rayo.direccion.normalize();
                 bool intersecta = calcular_color(rayo,luces,vec_objetos,color,0);

@@ -22,10 +22,6 @@ public:
       Luz *luz1 = new Luz();
       luz1->set(vec3(70,70,70), vec3(1,1,1),0.7);
       luces.push_back(luz1);
-      Luz *luz2 = new Luz();
-      luz2->set(vec3(0,10,0.75), vec3(0.9,1,0.9),0.7);
-      luces.push_back(luz2);
-        //luz.set(vec3(0,10,0), vec3(1,1,1),0.5);
        
       // --------- JARRON -------------
       Cilindro *jarron_vidrio = new Cilindro();
@@ -59,18 +55,16 @@ public:
       // ------- LUCIERNAGAS ---------
       Esfera *luci1 = new Esfera();
       luci1->centro = vec3(0,10,0);
-      luci1->radio = 0.5;
+      luci1->radio = 1;
       luci1->color = vec3(1,1,1);
+      luci1->kr = 0;
+      luci1->ior = 0;
+      luci1->type=kReflexion;
       vec_objetos.emplace_back(luci1);
-      
-      Esfera *luci1_glow = new Esfera();
-      luci1_glow->centro = vec3(0,10,0);
-      luci1_glow->radio = 1;
-      luci1_glow->color = vec3(1,1,0.75);
-      luci1_glow->kr = 0.9;
-      luci1_glow->ior = 1.2;
-      luci1_glow->type=kReflexionyRefraccion;
-      vec_objetos.emplace_back(luci1_glow);
+
+      Luz *luci1_luz = new Luz();
+      luci1_luz->set(vec3(0,10,0), vec3(0.9,1,0.9),0.7);
+      luces.push_back(luci1_luz);
 
       Esfera *luci2 = new Esfera();
       luci2->centro = vec3(-5,5,0);
