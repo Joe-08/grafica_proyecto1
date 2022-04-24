@@ -43,6 +43,11 @@ public:
             z /= max_value;
         } 
     }
+    void absolute(){
+        x = abs(x);
+        y = abs(y);
+        z = abs(z);
+    }
     ~vec3(){};
 };
 
